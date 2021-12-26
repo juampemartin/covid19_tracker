@@ -1,4 +1,5 @@
 {
+  "homepage": "http://juampemartin.github.io/covid19_tracker",
   "name": "covid19_tracker",
   "version": "0.1.0",
   "private": true,
@@ -10,6 +11,7 @@
     "axios": "^0.24.0",
     "chart.js": "^2.9.4",
     "classnames": "^2.3.1",
+    "netlify-cli": "^8.4.2",
     "react": "^17.0.2",
     "react-chartjs-2": "^2.11.2",
     "react-countup": "^6.1.0",
