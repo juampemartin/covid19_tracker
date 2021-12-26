@@ -1,20 +1,9 @@
-import React, { useState, useEffect } from "react"
-import { fetchDailyData } from "../../api/index"
+import React from "react"
 import { Bar } from "react-chartjs-2"
 
 import styles from "./Chart.module.css"
 
 const Chart = ({ data, country }) => {
-  const [dailyData, setDailyData] = useState([])
-
-  useEffect(() => {
-    const fetchAPI = async () => {
-      setDailyData(await fetchDailyData())
-    }
-    fetchAPI()
-  }, [])
-
-
   const barChart = data ? (
     <Bar
       data={{
