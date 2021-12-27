@@ -4,3 +4,9 @@
   justify-content: center;
   width: 75%;
 }
+
+@media only screen and(hover: none) and(pointer: coarse) {
+   .container {
+      display: none;
+   }
+}
