@@ -6,7 +6,6 @@ import cx from "classnames"
 import styles from "./Cards.module.css"
 
 const RegionCards = ({ data }) => {
-  console.log("Datos: ", data)
   return (
     <>
       {!data ? (
@@ -100,7 +99,7 @@ const RegionCards = ({ data }) => {
               component={Card}
               xs={12}
               md={2}
-              className={cx(styles.card, styles.infected)}
+              className={cx(styles.card, styles.critical)}
             >
               <CardContent>
                 <Typography color="textSecondary" gutterBottom>
@@ -119,6 +118,33 @@ const RegionCards = ({ data }) => {
                 </Typography>
                 <Typography variant="body2">
                   Numero total de personas ingresadas en UCIs hoy
+                </Typography>
+              </CardContent>
+            </Grid>
+            <Grid
+              item
+              component={Card}
+              xs={12}
+              md={2}
+              className={cx(styles.card, styles.critical)}
+            >
+              <CardContent>
+                <Typography color="textSecondary" gutterBottom>
+                  Hospitalizados 
+                </Typography>
+                <Typography variant="h5" gutterBottom>
+                  <CountUp
+                    start={0}
+                    end={data.hospitalized}
+                    duration={2.5}
+                    separator="."
+                  />
+                </Typography>
+                <Typography color="textSecondary">
+                  {new Date(data.lastUpdate).toDateString()}
+                </Typography>
+                <Typography variant="body2">
+                  Numero total de personas hostpitalizadas hoy
                 </Typography>
               </CardContent>
             </Grid>

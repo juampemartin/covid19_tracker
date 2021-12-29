@@ -22,7 +22,7 @@ const RegionsChart = ({ data, country }) => {
       }}
       options={{
         legend: { diplay: false },
-        title: { display: true, text: `Estado actual en ${country}` }
+        title: { display: true, text: `Estado actual en ${country.toUpperCase()}` }
       }}
     />
   ) : null

@@ -1,5 +1,5 @@
 import axios from "axios"
-import dayjs from "dayjs";
+import dayjs from "dayjs"
 
 const url = "https://covid-19-data.p.rapidapi.com"
 const specurl = "https://api.covid19tracking.narrativa.com/api"
@@ -40,7 +40,13 @@ export const fetchCountries = async () => {
 }
 
 export const fetchRegions = async country => {
-  const date = getCurrentDate()
+  const hours = new Date().getHours()
+  let date = getCurrentDate()
+
+  if (new Date().getHours() < 7) {
+    date = getCurrentDate(1)
+  }
+
   try {
     if (!country) country = "Spain"
     const res = await axios.get(`${specurl}/${date}/country/${country}`)
@@ -53,35 +59,45 @@ export const fetchRegions = async country => {
   }
 }
 
-export const fetchRegionData = async community => {
+export const fetchRegionData = async (community, country = "Spain") => {
   const date = getCurrentDate()
-  console.log(date)
   try {
-    let country = "Spain"
-    const res = await axios.get(`${specurl}/${date}/country/${country}`)
-    let prop = res.data.dates
-    let key = Object.keys(prop)[0]
-    const region = prop[key].countries[country].regions.filter(
-      region => region.id === community
-    );
+    const response = await axios.get(
+      `${specurl}/${date}/country/${country}/region/${community}`
+    )
+    let key = Object.keys(response.data.dates)[0]
+    const data = response.data.dates[key].countries[country].regions[0]
+
     return {
-      id: region[0].id,
-      lastUpdate: region[0].date,
-      todayConfirmed: region[0].today_confirmed,
-      newCases: region[0].today_new_confirmed,
-      newDeaths: region[0].today_new_deaths,
-      critical: region[0].today_new_intensive_care
+      id: data.id,
+      lastUpdate: data.date,
+      todayConfirmed: data.today_confirmed,
+      newCases: data.today_new_confirmed,
+      newDeaths: data.today_new_deaths,
+      critical: data.today_new_intensive_care,
+      hospitalized: data.today_new_total_hospitalised_patients
     }
   } catch (error) {
     console.error("There was an error while trying to retrieve the data", error)
   }
 }
 
-const getCurrentDate = () => {
+export const fetchDailyData = async (country = "spain") => {
+  const date = getCurrentDate()
+  try {
+    const res = await axios.get(`${specurl}/${country}`, {
+      params: { date_from: "2021-12-01", date_to: date }
+    })
+  } catch (error) {
+    console.error("Error")
+  }
+}
+
+const getCurrentDate = (yest = 0) => {
   let dateObj = dayjs()
-  let month = dateObj.get("month") + 1;
-  let day = dayjs().date();
+  let month = dateObj.get("month") + 1
+  let day = dayjs().date() - 1
   let year = dateObj.get("year")
 
-  return year + "-" + month + "-" + day;
+  return year + "-" + month + "-" + day
 }

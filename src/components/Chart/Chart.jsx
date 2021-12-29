@@ -1,5 +1,5 @@
-import React from "react"
-import { Bar } from "react-chartjs-2"
+import React, { useEffect, useState } from "react"
+import { Bar, Line } from "react-chartjs-2"
 
 import styles from "./Chart.module.css"
 
@@ -27,9 +27,7 @@ const Chart = ({ data, country }) => {
     />
   ) : null
 
-  return (
-    <div className={styles.container}>{barChart}</div>
-  )
+  return <div className={styles.container}>{barChart}</div>
 }
 
 export default Chart

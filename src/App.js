@@ -23,12 +23,12 @@ function App() {
     fetchAPI()
   }, [])
 
-  const handleCountryChange = async country => {
-    if (country === "Spain") setData(await fetchData("Spain"))
+  const handleCountryChange = async selected => {
+    if (selected === "Spain" || selected === "spain") setData(await fetchData("Spain"))
     else {
-      setData(await fetchRegionData(country))
+      setData(await fetchRegionData(selected))
     }
-    setCountry(country)
+    setCountry(selected)
   }
 
   return (
@@ -45,7 +45,6 @@ function App() {
       ) : (
         <RegionsChart data={data} country={country} />
       )}
-      <Chart data={data} country={country} />
     </div>
   )
 }
