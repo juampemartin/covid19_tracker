@@ -40,7 +40,6 @@ export const fetchCountries = async () => {
 }
 
 export const fetchRegions = async country => {
-  const hours = new Date().getHours()
   let date = getCurrentDate()
 
   if (new Date().getHours() < 7) {
@@ -83,13 +82,27 @@ export const fetchRegionData = async (community, country = "Spain") => {
 }
 
 export const fetchDailyData = async (country = "spain") => {
-  const date = getCurrentDate()
+  let date = getCurrentDate()
+
+  if (new Date().getHours() < 7) {
+    date = getCurrentDate(1)
+  }
+
   try {
-    const res = await axios.get(`${specurl}/${country}`, {
+    const res = await axios.get(`${specurl}/country/spain`, {
       params: { date_from: "2021-12-01", date_to: date }
     })
+    const data = Object.keys(res.data.dates).map((date, i) => {
+      let key = Object.keys(res.data.dates)[i]
+      return {
+        date: date,
+        confirmed: res.data.dates[key].countries.Spain.today_confirmed,
+        deaths: res.data.dates[key].countries.Spain.today_deaths,
+      }
+    })
+    return data;
   } catch (error) {
-    console.error("Error")
+    console.error("Error", error)
   }
 }
 
