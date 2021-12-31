@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 
 import {
   Cards,
@@ -6,30 +6,31 @@ import {
   Chart,
   CountryPicker,
   RegionsChart
-} from "./components"
-import { fetchRegionData, fetchData } from "./api/index"
-import styles from "./App.module.css"
-import image from "./images/image.png"
+} from "./components";
+import { fetchRegionData, fetchData } from "./api/index";
+import styles from "./App.module.css";
+import image from "./images/image.png";
 
 function App() {
-  const [data, setData] = useState(null)
-  const [country, setCountry] = useState("Spain")
+  const [data, setData] = useState(null);
+  const [country, setCountry] = useState("Spain");
 
   useEffect(() => {
     const fetchAPI = async () => {
-      setData(await fetchData())
-    }
+      setData(await fetchData());
+    };
 
-    fetchAPI()
-  }, [])
+    fetchAPI();
+  }, []);
 
   const handleCountryChange = async selected => {
-    if (selected === "Spain" || selected === "spain") setData(await fetchData("Spain"))
+    if (selected === "Spain" || selected === "spain")
+      setData(await fetchData("Spain"));
     else {
-      setData(await fetchRegionData(selected))
+      setData(await fetchRegionData(selected));
     }
-    setCountry(selected)
-  }
+    setCountry(selected);
+  };
 
   return (
     <div className={styles.container}>
@@ -46,7 +47,7 @@ function App() {
         <RegionsChart data={data} country={country} />
       )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
