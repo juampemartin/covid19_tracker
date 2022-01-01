@@ -1,5 +1,6 @@
 import axios from "axios";
 import dayjs from "dayjs";
+import config from "../api.config";
 
 const countryUrl = "https://covid-19-data.p.rapidapi.com";
 const regionUrl = "https://api.covid19tracking.narrativa.com/api";
@@ -9,8 +10,8 @@ export const fetchData = async country => {
     const res = await axios.get(`${countryUrl}/country`, {
       params: { name: !country ? "Spain" : country },
       headers: {
-        "x-rapidapi-host": "covid-19-data.p.rapidapi.com",
-        "x-rapidapi-key": "b18fd1e31emshb67c42ae13b5fe5p1a05d7jsn83985626f8ac"
+        "x-rapidapi-host": config.API_HOSTNAME,
+        "x-rapidapi-key": config.API_KEY,
       }
     });
     const modifiedData = {
