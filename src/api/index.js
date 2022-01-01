@@ -1,6 +1,5 @@
 import axios from "axios";
 import dayjs from "dayjs";
-require("dotenv").config();
 
 const countryUrl = "https://covid-19-data.p.rapidapi.com";
 const regionUrl = "https://api.covid19tracking.narrativa.com/api";
@@ -10,8 +9,8 @@ export const fetchData = async country => {
     const res = await axios.get(`${countryUrl}/country`, {
       params: { name: !country ? "Spain" : country },
       headers: {
-        "x-rapidapi-host": process.env.API_HOST,
-        "x-rapidapi-key": process.env.API_KEY
+        "x-rapidapi-host": "covid-19-data.p.rapidapi.com",
+        "x-rapidapi-key": "b18fd1e31emshb67c42ae13b5fe5p1a05d7jsn83985626f8ac"
       }
     });
     const modifiedData = {
@@ -24,16 +23,20 @@ export const fetchData = async country => {
     return modifiedData;
   } catch (error) {
     console.error("There was an error while trying to fetch the data", error);
+    let date = getCurrentDate(0);
+
+    if (new Date().getHours() < 7) {
+      date = getCurrentDate(1);
+    }
   }
 };
 
 export const fetchRegions = async country => {
-  let date = getCurrentDate();
+  let date = getCurrentDate(0);
 
   if (new Date().getHours() < 7) {
     date = getCurrentDate(1);
   }
-
   try {
     if (!country) country = "Spain";
     const res = await axios.get(`${regionUrl}/${date}/country/${country}`);
@@ -42,12 +45,16 @@ export const fetchRegions = async country => {
 
     return prop[key].countries[country].regions.map(region => region.id);
   } catch (error) {
-    console.error("There was an error while trying to fetch the data");
+    console.error("There was an error while trying to fetch the data", error);
   }
 };
 
 export const fetchRegionData = async (community, country = "Spain") => {
-  const date = getCurrentDate();
+  let date = getCurrentDate(0);
+
+  if (new Date().getHours() < 7) {
+    date = getCurrentDate(1);
+  }
   try {
     const response = await axios.get(
       `${regionUrl}/${date}/country/${country}/region/${community}`
@@ -73,7 +80,7 @@ export const fetchRegionData = async (community, country = "Spain") => {
 };
 
 export const fetchDailyData = async (country = "spain") => {
-  let date = getCurrentDate();
+  let date = getCurrentDate(0);
 
   if (new Date().getHours() < 7) {
     date = getCurrentDate(1);
@@ -81,7 +88,7 @@ export const fetchDailyData = async (country = "spain") => {
 
   try {
     const res = await axios.get(`${regionUrl}/country/spain`, {
-      params: { date_from: "2021-12-01", date_to: date }
+      params: { date_from: getCurrentDate(30), date_to: date }
     });
     const data = Object.keys(res.data.dates).map((date, i) => {
       let key = Object.keys(res.data.dates)[i];
@@ -97,10 +104,13 @@ export const fetchDailyData = async (country = "spain") => {
   }
 };
 
-const getCurrentDate = (dMod = 0) => {
+const getCurrentDate = (modifier) => {
   let dateObj = dayjs();
+  if (modifier != 0) {
+     dateObj = dateObj.add(-modifier, "day");
+  }
   let month = dateObj.get("month") + 1;
-  let day = dayjs().date() - dMod;
+  let day = dateObj.date();
   let year = dateObj.get("year");
 
   return year + "-" + month + "-" + day;
