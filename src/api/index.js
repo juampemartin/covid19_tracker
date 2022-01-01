@@ -23,11 +23,6 @@ export const fetchData = async country => {
     return modifiedData;
   } catch (error) {
     console.error("There was an error while trying to fetch the data", error);
-    let date = getCurrentDate(0);
-
-    if (new Date().getHours() < 7) {
-      date = getCurrentDate(1);
-    }
   }
 };
 
@@ -106,7 +101,7 @@ export const fetchDailyData = async (country = "spain") => {
 
 const getCurrentDate = (modifier) => {
   let dateObj = dayjs();
-  if (modifier != 0) {
+  if (modifier !== 0) {
      dateObj = dateObj.add(-modifier, "day");
   }
   let month = dateObj.get("month") + 1;
