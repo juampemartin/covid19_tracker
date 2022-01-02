@@ -4,7 +4,7 @@ import {
   Cards,
   RegionCards,
   Chart,
-  CountryPicker,
+  RegionPicker,
   RegionsChart
 } from "./components";
 import { fetchRegionData, fetchData } from "./api/index";
@@ -13,7 +13,7 @@ import image from "./images/image.png";
 
 function App() {
   const [data, setData] = useState(null);
-  const [country, setCountry] = useState("Spain");
+  const [region, setRegion] = useState("Spain");
 
   useEffect(() => {
     const fetchAPI = async () => {
@@ -23,30 +23,31 @@ function App() {
     fetchAPI();
   }, []);
 
-  const handleCountryChange = async selected => {
+  const handleRegionChange = async (selected) => {
     if (selected === "Spain" || selected === "spain")
-      setData(await fetchData("Spain"));
+      setData(await fetchData());
     else {
       setData(await fetchRegionData(selected));
     }
-    setCountry(selected);
+    setRegion(selected);
   };
 
   return (
-    <div className={styles.container}>
-      <img className={styles.image} src={image} alt="COVID-19" />
-      {country === "Spain" ? (
-        <Cards data={data} />
-      ) : (
-        <RegionCards data={data} />
-      )}
-      <CountryPicker handleCountryChange={handleCountryChange} />
-      {country === "Spain" ? (
-        <Chart data={data} country={country} />
-      ) : (
-        <RegionsChart data={data} country={country} />
-      )}
-    </div>
+    <>
+      <div className={styles.logoContainer}>
+        <img className={styles.image} src={image} alt="Logo" />
+        <h2>Coronavirus Tracking</h2>
+      </div>
+      <div className={styles.container}>
+        {region === "Spain" ? (
+          <Cards data={data} />
+        ) : (
+          <RegionCards data={data} />
+        )}
+        <RegionPicker handleRegionChange={handleRegionChange} />
+        {region === "Spain" ? <Chart /> : <RegionsChart region={region} />}
+      </div>
+    </>
   );
 }
 

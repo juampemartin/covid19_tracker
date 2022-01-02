@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 body {
   background-color: rgb(250, 250, 250);
 }
@@ -10,8 +12,21 @@ body {
 }
 
 .image {
-  width: 370px;
-  margin-top: 50px;
+  width: 4%;
+  padding-right: 1%;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+h2 {
+  font-size: 70px;
+  font-family: "Roboto", sans-serif;
+  color: grey;
 }
 
 @media only screen and (max-width: 770px) {

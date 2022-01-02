@@ -4,59 +4,60 @@ import config from "../api.config";
 
 const countryUrl = "https://covid-19-data.p.rapidapi.com";
 const regionUrl = "https://api.covid19tracking.narrativa.com/api";
+const COUNTRY = "Spain";
 
-export const fetchData = async country => {
+export const fetchData = async () => {
   try {
     const res = await axios.get(`${countryUrl}/country`, {
-      params: { name: !country ? "Spain" : country },
+      params: { name: COUNTRY },
       headers: {
         "x-rapidapi-host": config.API_HOSTNAME,
-        "x-rapidapi-key": config.API_KEY,
+        "x-rapidapi-key": config.API_KEY
       }
     });
-    const modifiedData = {
+
+    return {
       confirmed: res.data[0].confirmed,
       recovered: res.data[0].recovered,
       deaths: res.data[0].deaths,
       critical: res.data[0].critical,
       lastUpdate: res.data[0].lastUpdate
     };
-    return modifiedData;
   } catch (error) {
-    console.error("There was an error while trying to fetch the data", error);
+    console.error("There was an error ", error);
   }
 };
 
-export const fetchRegions = async country => {
-  let date = getCurrentDate(0);
+export const fetchRegions = async () => {
+  let date = getDate(0);
 
-  if (new Date().getHours() < 7) {
-    date = getCurrentDate(1);
+  if (dayjs().hour() < 7) {
+    date = getDate(1);
   }
   try {
-    if (!country) country = "Spain";
-    const res = await axios.get(`${regionUrl}/${date}/country/${country}`);
-    let prop = res.data.dates;
-    let key = Object.keys(prop)[0];
+    const res = await axios.get(`${regionUrl}/${date}/country/${COUNTRY}`);
+    let key = Object.keys(res.data.dates)[0];
 
-    return prop[key].countries[country].regions.map(region => region.id);
+    return res.data.dates[key].countries[COUNTRY].regions.map(
+      (region) => region.id
+    );
   } catch (error) {
-    console.error("There was an error while trying to fetch the data", error);
+    console.error("There was an error ", error);
   }
 };
 
-export const fetchRegionData = async (community, country = "Spain") => {
-  let date = getCurrentDate(0);
+export const fetchRegionData = async (community) => {
+  let date = getDate(0);
 
-  if (new Date().getHours() < 7) {
-    date = getCurrentDate(1);
+  if (dayjs().hour() < 7) {
+    date = getDate(1);
   }
   try {
     const response = await axios.get(
-      `${regionUrl}/${date}/country/${country}/region/${community}`
+      `${regionUrl}/${date}/country/${COUNTRY}/region/${community}`
     );
     let key = Object.keys(response.data.dates)[0];
-    const data = response.data.dates[key].countries[country].regions[0];
+    const data = response.data.dates[key].countries[COUNTRY].regions[0];
 
     return {
       id: data.id,
@@ -75,35 +76,53 @@ export const fetchRegionData = async (community, country = "Spain") => {
   }
 };
 
-export const fetchDailyData = async (country = "spain") => {
-  let date = getCurrentDate(0);
+export const fetchDailyData = async (region = "") => {
+  let date = getDate(0);
 
   if (new Date().getHours() < 7) {
-    date = getCurrentDate(1);
+    date = getDate(1);
   }
 
   try {
-    const res = await axios.get(`${regionUrl}/country/spain`, {
-      params: { date_from: getCurrentDate(30), date_to: date }
+    const res = await axios.get(`${regionUrl}/country/${COUNTRY}`, {
+      params: { date_from: getDate(30), date_to: date }
     });
-    const data = Object.keys(res.data.dates).map((date, i) => {
-      let key = Object.keys(res.data.dates)[i];
-      return {
-        date: date,
-        confirmed: res.data.dates[key].countries.Spain.today_confirmed,
-        deaths: res.data.dates[key].countries.Spain.today_deaths
-      };
-    });
+
+    let data = {};
+
+    // Check if region is specified or not
+    if (region.length === 0) {
+      data = Object.keys(res.data.dates).map((date, i) => {
+        let key = Object.keys(res.data.dates)[i];
+        return {
+          date: date,
+          confirmed: res.data.dates[key].countries[COUNTRY].today_confirmed,
+          deaths: res.data.dates[key].countries[COUNTRY].today_deaths
+        };
+      });
+    } else {
+      data = Object.keys(res.data.dates).map((date, i) => {
+        let key = Object.keys(res.data.dates)[i];
+        const community = res.data.dates[key].countries[COUNTRY].regions.filter(
+          (reg) => reg.id === region
+        )[0];
+        return {
+          date: date,
+          confirmed: community.today_confirmed,
+          deaths: community.today_deaths
+        };
+      });
+    }
     return data;
   } catch (error) {
-    console.error("Error", error);
+    console.error("There was an error", error);
   }
 };
 
-const getCurrentDate = (modifier) => {
+const getDate = (modifier) => {
   let dateObj = dayjs();
   if (modifier !== 0) {
-     dateObj = dateObj.add(-modifier, "day");
+    dateObj = dateObj.add(-modifier, "day");
   }
   let month = dateObj.get("month") + 1;
   let day = dateObj.date();

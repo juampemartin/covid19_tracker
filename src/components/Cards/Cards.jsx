@@ -12,7 +12,7 @@ const Cards = ({ data }) => {
         "Loading..."
       ) : (
         <div className={styles.container}>
-          <Grid container spacing={8} justifyContent="center">
+          <Grid container spacing={5} justifyContent="center">
             <Grid item component={Card} xs={12} md={2} className={cx(styles.card, styles.infected)}>
               <CardContent>
                 <Typography color="textSecondary" gutterBottom>

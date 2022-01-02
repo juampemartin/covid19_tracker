@@ -1,35 +1,45 @@
-import React from "react"
-import { Bar } from "react-chartjs-2"
+import React, {useState, useEffect} from "react";
+import { Line } from "react-chartjs-2";
 
-import styles from "./Chart.module.css"
+import styles from "./Chart.module.css";
+import { fetchDailyData } from "../../api/index";
 
-const RegionsChart = ({ data, country }) => {
-  const barChart = data ? (
-    <Bar
+const RegionsChart = ({ region }) => {
+  const [dailyData, setDailyData] = useState([]);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      setDailyData(await fetchDailyData(region));
+    };
+    fetchAPI();
+  }, [region]);
+
+  console.log(dailyData)
+  const lineChart = dailyData[0] ? (
+    <Line
       data={{
-        labels: ["Infectados", "Nuevos Casos", "Muertes"],
+        labels: dailyData.map(data => data.date),
         datasets: [
           {
-            label: "Personas",
-            backgroundColor: [
-              "rgba(0, 0, 255, 0.5",
-              "rgba(0, 255, 0, 0.5)",
-              "rgba(255, 0, 0, 0.5)"
-            ],
-            data: [data.todayConfirmed, data.newCases, data.newDeaths]
+            data: dailyData.map(data => data.confirmed),
+            label: "Infectados",
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75,192,192,1)",
+            fill: true
+          },
+          {
+            data: dailyData.map(data => data.deaths),
+            label: "Muertes",
+            borderColor: "#742774",
+            backgroundColor: "rgba(116, 39, 116, 0.5)",
+            fill: true
           }
         ]
       }}
-      options={{
-        legend: { diplay: false },
-        title: { display: true, text: `Estado actual en ${country.toUpperCase()}` }
-      }}
     />
-  ) : null
+  ) : null;
 
-  return (
-    <div className={styles.container}>{barChart}</div>
-  )
-}
+  return <div className={styles.container}>{lineChart}</div>;
+};
 
-export default RegionsChart
+export default RegionsChart;

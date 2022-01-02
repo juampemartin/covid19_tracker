@@ -18,6 +18,7 @@
 .env.test.local
 .env.production.local
 api.config.js
+./src/api.config.js
 
 
 npm-debug.log*
