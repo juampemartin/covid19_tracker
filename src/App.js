@@ -14,6 +14,7 @@ import image from "./images/image.png";
 function App() {
   const [data, setData] = useState(null);
   const [region, setRegion] = useState("Spain");
+  const [width, setWidth] = useState(window.innerWidth)
 
   useEffect(() => {
     const fetchAPI = async () => {
@@ -32,6 +33,19 @@ function App() {
     setRegion(selected);
   };
 
+  const handleWindowSizeChange = () => {
+    setWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
+  const isMobile = width <= 768;
+
   return (
     <>
       <div className={styles.logoContainer}>
@@ -45,7 +59,11 @@ function App() {
           <RegionCards data={data} />
         )}
         <RegionPicker handleRegionChange={handleRegionChange} />
-        {region === "Spain" ? <Chart /> : <RegionsChart region={region} />}
+        {isMobile ? null : (
+          <>
+            {region === "Spain" ? <Chart /> : <RegionsChart region={region} />}
+          </>
+        )}
       </div>
     </>
   );
