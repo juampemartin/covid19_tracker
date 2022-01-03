@@ -1,9 +1,9 @@
-import React from "react"
-import { Card, CardContent, Typography, Grid } from "@material-ui/core"
-import CountUp from "react-countup"
-import cx from "classnames"
+import React from "react";
+import { Card, CardContent, Typography, Grid } from "@material-ui/core";
+import CountUp from "react-countup";
+import cx from "classnames";
 
-import styles from "./Cards.module.css"
+import styles from "./Cards.module.css";
 
 const RegionCards = ({ data }) => {
   return (
@@ -103,7 +103,7 @@ const RegionCards = ({ data }) => {
             >
               <CardContent>
                 <Typography color="textSecondary" gutterBottom>
-                  Criticos 
+                  Criticos
                 </Typography>
                 <Typography variant="h5" gutterBottom>
                   <CountUp
@@ -125,7 +125,7 @@ const RegionCards = ({ data }) => {
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-export default RegionCards
+export default RegionCards;

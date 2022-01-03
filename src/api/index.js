@@ -66,7 +66,6 @@ export const fetchRegionData = async (community) => {
       newCases: data.today_new_confirmed,
       newDeaths: data.today_new_deaths,
       critical: data.today_new_intensive_care,
-      hospitalized: data.today_new_total_hospitalised_patients
     };
   } catch (error) {
     console.error(
@@ -124,9 +123,8 @@ const getDate = (modifier) => {
   if (modifier !== 0) {
     dateObj = dateObj.add(-modifier, "day");
   }
-  let month = dateObj.get("month") + 1;
-  let day = dateObj.date();
-  let year = dateObj.get("year");
 
-  return year + "-" + month + "-" + day;
+  const date = dayjs(dateObj).format("YYYY-MM-DD")
+
+  return date.toString();
 };

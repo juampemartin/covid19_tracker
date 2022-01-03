@@ -19,7 +19,7 @@ const RegionPicker = ({ handleRegionChange }) => {
     <FormControl classes={styles.formControl}>
       <NativeSelect defaultValue="" onChange={(event) => handleRegionChange(event.target.value) }> 
         <option value="Spain">España</option>
-        {regions.map((region, i) => <option key={i} value={region}>{region.toUpperCase()}</option>)}
+        {regions.map((region, i) => <option key={i} value={region}>{region.toUpperCase().replace(/_/g, " ")}</option>)}
       </NativeSelect>
     </FormControl>
   )

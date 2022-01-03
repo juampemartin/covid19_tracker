@@ -14,7 +14,6 @@ const RegionsChart = ({ region }) => {
     fetchAPI();
   }, [region]);
 
-  console.log(dailyData)
   const lineChart = dailyData[0] ? (
     <Line
       data={{
