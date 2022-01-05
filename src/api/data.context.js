@@ -12,39 +12,40 @@ export const DataContextProvider = ({ children }) => {
 
   const { location, regionType } = useContext(RegionContext);
 
-  async function retrieveData(loc) {
-    setIsLoading(true);
-
-    switch (regionType) {
-      case "country":
-        await fetchData()
-          .then((result) => {
-            setData(result);
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            setIsLoading(false);
-            setError(err);
-          });
-        break;
-      case "province":
-        await fetchRegionData(loc)
-          .then((result) => {
-            setData(result);
-            setIsLoading(false);
-          })
-          .catch((err) => {
-            setIsLoading(false);
-            setError(err);
-          });
-    }
-  }
-
   useEffect(() => {
-    if (location) {
-      retrieveData(location);
+    async function retrieveData(loc) {
+      setIsLoading(true);
+
+      switch (regionType) {
+        case "country":
+          await fetchData()
+            .then((result) => {
+              setData(result);
+              setIsLoading(false);
+            })
+            .catch((err) => {
+              setIsLoading(false);
+              setError(err);
+            });
+          break;
+        case "province":
+          await fetchRegionData(loc)
+            .then((result) => {
+              setData(result);
+              setIsLoading(false);
+            })
+            .catch((err) => {
+              setIsLoading(false);
+              setError(err);
+            });
+          break;
+        default:
+          console.log("Default case triggered");
+          break;
+      }
     }
-  }, [location]);
+    retrieveData(location);
+  }, [location, regionType]);
 
   return (
     <DataContext.Provider

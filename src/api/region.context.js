@@ -1,11 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 import { fetchRegions } from "./index";
 
 export const RegionContext = createContext();
 
 export const RegionContextProvider = ({ children }) => {
-  const [keyword, setKeyword] = useState("Spain");
   const [location, setLocation] = useState("Spain");
   const [regions, setRegions] = useState([]);
   const [regionType, setRegionType] = useState("country");
@@ -14,13 +13,10 @@ export const RegionContextProvider = ({ children }) => {
 
   const onChange = (selected) => {
     setLocation(selected);
-    selected.toLowerCase() != "spain" ? setRegionType("province") : setRegionType("country");
+    selected.toLowerCase() !== "spain" ? setRegionType("province") : setRegionType("country");
   };
 
   useEffect(() => {
-    if (!keyword.length) {
-      return;
-    }
     fetchRegions()
       .then((result) => {
         setIsLoading(false);
@@ -40,7 +36,6 @@ export const RegionContextProvider = ({ children }) => {
         location,
         regions,
         search: onChange,
-        keyword,
         regionType
       }}
     >
