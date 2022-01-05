@@ -1,28 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { NativeSelect, FormControl } from "@material-ui/core";
 
 import styles from "./RegionPicker.module.css";
-import { fetchRegions } from "../../api/index";
+import { RegionContext } from "../../api/region.context";
 
-const RegionPicker = ({ handleRegionChange }) => {
-  const [regions, setRegions] = useState([])
-
-  useEffect(() => {
-    const fetchAPI = async () => {
-      setRegions(await fetchRegions())
-    }
-
-    fetchAPI();
-  }, [setRegions])
+const RegionPicker = () => {
+  const { regions, search, isLoading } = useContext(RegionContext);
 
   return (
     <FormControl classes={styles.formControl}>
-      <NativeSelect defaultValue="" onChange={(event) => handleRegionChange(event.target.value) }> 
+      <NativeSelect
+        defaultValue="Spain"
+        onChange={(event) => {
+          search(event.target.value);
+        }}
+      >
         <option value="Spain">España</option>
-        {regions.map((region, i) => <option key={i} value={region}>{region.toUpperCase().replace(/_/g, " ")}</option>)}
+        {!isLoading
+          ? regions.map((region, i) => (
+              <option key={i} value={region}>
+                {region.toUpperCase().replace(/_/g, " ")}
+              </option>
+            ))
+          : null}
       </NativeSelect>
     </FormControl>
-  )
-}
+  );
+};
 
-export default RegionPicker
+export default RegionPicker;

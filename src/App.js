@@ -1,71 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import {
-  Cards,
-  RegionCards,
-  Chart,
-  RegionPicker,
-  RegionsChart
-} from "./components";
-import { fetchRegionData, fetchData } from "./api/index";
-import styles from "./App.module.css";
-import image from "./images/image.png";
+import { RegionContextProvider } from "./api/region.context";
+import { DataContextProvider } from "./api/data.context";
+import Home from "./components/Home/Home";
 
 function App() {
-  const [data, setData] = useState(null);
-  const [region, setRegion] = useState("Spain");
-  const [width, setWidth] = useState(window.innerWidth)
-
-  useEffect(() => {
-    const fetchAPI = async () => {
-      setData(await fetchData());
-    };
-
-    fetchAPI();
-  }, []);
-
-  const handleRegionChange = async (selected) => {
-    if (selected === "Spain" || selected === "spain")
-      setData(await fetchData());
-    else {
-      setData(await fetchRegionData(selected));
-    }
-    setRegion(selected);
-  };
-
-  const handleWindowSizeChange = () => {
-    setWidth(window.innerWidth);
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", handleWindowSizeChange);
-    return () => {
-      window.removeEventListener("resize", handleWindowSizeChange);
-    };
-  }, []);
-
-  const isMobile = width <= 768;
-
   return (
-    <>
-      <div className={styles.logoContainer}>
-        <img className={styles.image} src={image} alt="Logo" />
-        <h2>Coronavirus Tracking</h2>
-      </div>
-      <div className={styles.container}>
-        {region === "Spain" ? (
-          <Cards data={data} />
-        ) : (
-          <RegionCards data={data} />
-        )}
-        <RegionPicker handleRegionChange={handleRegionChange} />
-        {isMobile ? null : (
-          <>
-            {region === "Spain" ? <Chart /> : <RegionsChart region={region} />}
-          </>
-        )}
-      </div>
-    </>
+    <RegionContextProvider>
+      <DataContextProvider>
+        <Home />
+      </DataContextProvider>
+    </RegionContextProvider>
   );
 }
 

@@ -2,6 +2,10 @@
   margin: 75px 0;
 }
 
+.loadingContainer {
+  margin: 15%;
+}
+
 .card {
   margin: 0 2% !important;
 }

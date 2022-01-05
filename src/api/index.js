@@ -2,26 +2,28 @@ import axios from "axios";
 import dayjs from "dayjs";
 import config from "../api.config";
 
-const countryUrl = "https://covid-19-data.p.rapidapi.com";
 const regionUrl = "https://api.covid19tracking.narrativa.com/api";
 const COUNTRY = "Spain";
 
 export const fetchData = async () => {
+  let date = getDate(0);
+
+  if (dayjs().hour() < 7) {
+    date = getDate(1);
+  }
+
   try {
-    const res = await axios.get(`${countryUrl}/country`, {
-      params: { name: COUNTRY },
-      headers: {
-        "x-rapidapi-host": config.API_HOSTNAME,
-        "x-rapidapi-key": config.API_KEY
-      }
-    });
+    const res = await axios.get(`${regionUrl}/${date}/country/${COUNTRY}`);
+
+    let key = Object.keys(res.data.dates)[0];
+    const data = res.data.dates[key].countries[COUNTRY]
 
     return {
-      confirmed: res.data[0].confirmed,
-      recovered: res.data[0].recovered,
-      deaths: res.data[0].deaths,
-      critical: res.data[0].critical,
-      lastUpdate: res.data[0].lastUpdate
+      confirmed: data.today_confirmed,
+      todayConfirmed: data.today_new_confirmed,
+      deaths: data.today_deaths,
+      critical: data.today_new_intensive_care,
+      lastUpdate: date
     };
   } catch (error) {
     console.error("There was an error ", error);
@@ -65,7 +67,7 @@ export const fetchRegionData = async (community) => {
       todayConfirmed: data.today_confirmed,
       newCases: data.today_new_confirmed,
       newDeaths: data.today_new_deaths,
-      critical: data.today_new_intensive_care,
+      critical: data.today_new_intensive_care
     };
   } catch (error) {
     console.error(
@@ -75,7 +77,7 @@ export const fetchRegionData = async (community) => {
   }
 };
 
-export const fetchDailyData = async (region = "") => {
+export const fetchDailyData = async (region) => {
   let date = getDate(0);
 
   if (new Date().getHours() < 7) {
@@ -90,7 +92,7 @@ export const fetchDailyData = async (region = "") => {
     let data = {};
 
     // Check if region is specified or not
-    if (region.length === 0) {
+    if (!region || region === "Spain") {
       data = Object.keys(res.data.dates).map((date, i) => {
         let key = Object.keys(res.data.dates)[i];
         return {
@@ -123,8 +125,7 @@ const getDate = (modifier) => {
   if (modifier !== 0) {
     dateObj = dateObj.add(-modifier, "day");
   }
-
-  const date = dayjs(dateObj).format("YYYY-MM-DD")
+  const date = dayjs(dateObj).format("YYYY-MM-DD");
 
   return date.toString();
 };

@@ -3,6 +3,15 @@
   display: flex;
   justify-content: center;
   width: 75%;
+  padding-top: 2.5%;
+  padding-bottom: 5%;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 10%;
 }
 
 @media only screen and(hover: none) and(pointer: coarse) {
