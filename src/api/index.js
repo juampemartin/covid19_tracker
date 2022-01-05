@@ -1,6 +1,5 @@
 import axios from "axios";
 import dayjs from "dayjs";
-import config from "../api.config";
 
 const regionUrl = "https://api.covid19tracking.narrativa.com/api";
 const COUNTRY = "Spain";

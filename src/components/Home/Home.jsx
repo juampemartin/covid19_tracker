@@ -29,7 +29,7 @@ const Home = () => {
         <h2>Coronavirus Tracking</h2>
       </div>
       <div className={styles.container}>
-        {regionType == "country" ? (
+        {regionType === "country" ? (
           <Cards data={data} />
         ) : (
           <RegionCards data={data} />
