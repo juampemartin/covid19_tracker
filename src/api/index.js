@@ -1,7 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-const regionUrl = "https://api.covid19tracking.narrativa.com/api";
+const url = "https://api.covid19tracking.narrativa.com/api";
 const COUNTRY = "Spain";
 
 export const fetchData = async () => {
@@ -12,7 +12,7 @@ export const fetchData = async () => {
   }
 
   try {
-    const res = await axios.get(`${regionUrl}/${date}/country/${COUNTRY}`);
+    const res = await axios.get(`${url}/${date}/country/${COUNTRY}`);
 
     let key = Object.keys(res.data.dates)[0];
     const data = res.data.dates[key].countries[COUNTRY]
@@ -36,7 +36,7 @@ export const fetchRegions = async () => {
     date = getDate(1);
   }
   try {
-    const res = await axios.get(`${regionUrl}/${date}/country/${COUNTRY}`);
+    const res = await axios.get(`${url}/${date}/country/${COUNTRY}`);
     let key = Object.keys(res.data.dates)[0];
 
     return res.data.dates[key].countries[COUNTRY].regions.map(
@@ -55,7 +55,7 @@ export const fetchRegionData = async (community) => {
   }
   try {
     const response = await axios.get(
-      `${regionUrl}/${date}/country/${COUNTRY}/region/${community}`
+      `${url}/${date}/country/${COUNTRY}/region/${community}`
     );
     let key = Object.keys(response.data.dates)[0];
     const data = response.data.dates[key].countries[COUNTRY].regions[0];
@@ -84,7 +84,7 @@ export const fetchDailyData = async (region) => {
   }
 
   try {
-    const res = await axios.get(`${regionUrl}/country/${COUNTRY}`, {
+    const res = await axios.get(`${url}/country/${COUNTRY}`, {
       params: { date_from: getDate(30), date_to: date }
     });
 

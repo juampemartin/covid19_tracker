@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
+import { Paper, Switch } from "@material-ui/core";
+
 import { Chart, Cards, RegionCards, RegionPicker } from "../index";
 
 import styles from "../../App.module.css";
 import image from "../../images/image.png";
 import { DataContext } from "../../api/data.context";
 
-const Home = () => {
+const Home = ({ handleThemeChange, toggleDark }) => {
   const [width, setWidth] = useState(window.innerWidth);
   const { data, location, regionType } = useContext(DataContext);
 
@@ -24,9 +26,15 @@ const Home = () => {
 
   return (
     <>
+      <Paper style={{margin: "-1.5%", padding: "4%"}}>
       <div className={styles.logoContainer}>
         <img className={styles.image} src={image} alt="Logo" />
         <h2>Coronavirus Tracking</h2>
+        <Switch
+          checked={toggleDark}
+          onChange={() => handleThemeChange()}
+          name="toggleDark"
+        />
       </div>
       <div className={styles.container}>
         {regionType === "country" ? (
@@ -37,6 +45,7 @@ const Home = () => {
         <RegionPicker />
         {isMobile ? null : <Chart region={location} />}
       </div>
+      </Paper>
     </>
   );
 };
