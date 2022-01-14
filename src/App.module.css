@@ -4,11 +4,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column
+  flex-direction: column;
 }
 
 .image {
-  width: 8vh;
+  width: 8.5vh;
   padding-right: 1%;
 }
 

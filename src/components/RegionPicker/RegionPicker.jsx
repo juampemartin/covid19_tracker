@@ -1,14 +1,13 @@
 import React, { useContext } from "react";
 import { NativeSelect, FormControl } from "@material-ui/core";
 
-import styles from "./RegionPicker.module.css";
 import { RegionContext } from "../../api/region.context";
 
 const RegionPicker = () => {
   const { regions, search, isLoading } = useContext(RegionContext);
 
   return (
-    <FormControl classes={styles.formControl}>
+    <FormControl>
       <NativeSelect
         defaultValue="Spain"
         onChange={(event) => {
